@@ -41,7 +41,7 @@ dependencies = [
     "ifaddr==0.2.0",
     "Jinja2==3.1.2",
     "lru-dict==1.2.0",
-    "PyJWT==2.8.0",
+    "PyJWT==2.10.1",
     # PyJWT has loose dependency. We want the latest one.
     "cryptography==41.0.3",
     # pyOpenSSL 23.2.0 is required to work with cryptography 41+
