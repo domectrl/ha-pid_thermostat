@@ -31,7 +31,7 @@ dependencies = [
     "attrs==22.2.0",
     "atomicwrites-homeassistant==1.4.1",
     "awesomeversion==24.6.0",
-    "bcrypt==4.0.1",
+    "bcrypt==4.2.1",
     "certifi>=2021.5.30",
     "ciso8601==2.3.0",
     # When bumping httpx, please check the version pins of
