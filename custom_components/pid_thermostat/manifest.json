@@ -11,15 +11,15 @@
     "sensor",
     "input_number"
   ],
-  "documentation": "https://www.home-assistant.io/integrations/pid_thermostat",
+  "documentation": "https://github.com/domectrl/ha-pid_thermostat",
   "homekit": {},
   "iot_class": "calculated",
-  "issue_tracker": "https://github.com/ludeeus/antonverburg/ha-pid_thermostat/issues",
+  "issue_tracker": "https://github.com/domectrl/ha-pid_thermostat/issues",
   "quality_scale": "platinum",
   "requirements": [
-    "dvg-pid-controller==2.1.1"
+    "dvg-pid-controller==2.2.0"
   ],
   "ssdp": [],
-  "version": "0.9.0",
+  "version": "0.9.3",
   "zeroconf": []
 }

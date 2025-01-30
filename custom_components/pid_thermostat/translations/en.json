@@ -29,9 +29,9 @@
           "cycle_time": "Duration between controller cycles",
           "target_sensor": "Temperature input sensor entity",
           "heater": "Heater device entity",
-          "kp": "Differential factor (Kd)",
+          "kp": "Proportional gain factor (Kp)",
           "ki": "Integration factor (Ki)",
-          "kd": "Proportional gain factor (Kp)",
+          "kd": "Differential factor (Kd)",
           "ac_mode": "Thermostat mode"
         },
         "data_description": {

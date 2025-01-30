@@ -1,14 +1,14 @@
 """Constants for the PID thermostat integration."""
+
 from homeassistant.components.climate import ClimateEntityFeature
 from homeassistant.const import Platform
 
-from .ha_pid_shared.const import (  # noqa: F401
+from .pid_shared.const import (  # noqa: F401
     CONF_CYCLE_TIME,
     CONF_PID_KD,
     CONF_PID_KI,
     CONF_PID_KP,
 )
-
 
 DOMAIN = "pid_thermostat"
 PLATFORMS = [Platform.CLIMATE]
@@ -32,5 +32,10 @@ DEFAULT_PID_KP = 100.0
 DEFAULT_PID_KI = 0.1
 DEFAULT_PID_KD = 0.0
 DEFAULT_AC_MODE = AC_MODE_HEAT
+DEFAULT_TARGET_TEMPERATURE = 19.0
 
-SUPPORT_FLAGS = ClimateEntityFeature.TARGET_TEMPERATURE
+SUPPORT_FLAGS = (
+    ClimateEntityFeature.TARGET_TEMPERATURE
+    | ClimateEntityFeature.TURN_OFF
+    | ClimateEntityFeature.TURN_ON
+)

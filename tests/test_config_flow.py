@@ -1,16 +1,22 @@
 """Test the PID thermostat config flow."""
+
 from unittest.mock import patch
 
 import pytest
-
+import voluptuous as vol
 from homeassistant import config_entries
+from homeassistant.const import CONF_NAME
+from homeassistant.core import CoreState, HomeAssistant
+from homeassistant.data_entry_flow import FlowResultType
+from pytest_homeassistant_custom_component.common import MockConfigEntry
+
 from custom_components.pid_thermostat.const import (
+    CONF_AC_MODE,
     CONF_CYCLE_TIME,
+    CONF_HEATER,
     CONF_PID_KD,
     CONF_PID_KI,
     CONF_PID_KP,
-    CONF_AC_MODE,
-    CONF_HEATER,
     CONF_SENSOR,
     DEFAULT_AC_MODE,
     DEFAULT_CYCLE_TIME,
@@ -19,17 +25,10 @@ from custom_components.pid_thermostat.const import (
     DEFAULT_PID_KP,
     DOMAIN,
 )
-from homeassistant.const import CONF_NAME
-from homeassistant.core import CoreState, HomeAssistant
-from homeassistant.data_entry_flow import FlowResultType
-
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 
-@pytest.mark.parametrize("platform", ("climate",))
-async def test_config_flow(
-    hass: HomeAssistant, platform: str
-) -> None:  # pylint: disable=W0613
+@pytest.mark.parametrize("platform", ["climate"])
+async def test_config_flow(hass: HomeAssistant, platform: str) -> None:  # noqa: ARG001
     """Test the config flow."""
     heater = "number.output"
     sensor = "sensor.input"
@@ -74,7 +73,11 @@ async def test_config_flow(
     assert config_entry.title == "My PID Thermostat"
 
 
-def get_suggested(schema, key):
+class KeyNotFoundError(Exception):
+    """Key was not found."""
+
+
+def get_suggested(schema: vol.Schema, key: vol.Schema) -> None:
     """Get suggested value for key in voluptuous schema."""
     for k in schema:
         if k == key:
@@ -82,10 +85,10 @@ def get_suggested(schema, key):
                 return None
             return k.description["suggested_value"]
     # Wanted key absent from schema
-    raise Exception
+    raise KeyNotFoundError
 
 
-@pytest.mark.parametrize("platform", ("climate",))
+@pytest.mark.parametrize("platform", ["climate"])
 async def test_options(hass: HomeAssistant, platform: str) -> None:
     """Test reconfiguring."""
     heater_1 = "number.heater_1"

@@ -1,14 +1,12 @@
 """Config flow for pid integration."""
-from collections.abc import Mapping
 import logging
+from collections.abc import Mapping
 from typing import Any, cast
 
 import voluptuous as vol
-
+from homeassistant.components.input_number import DOMAIN as INPUT_NUMBER_DOMAIN
 from homeassistant.components.number import DOMAIN as NUMBER_DOMAIN
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
-from homeassistant.components.input_number import DOMAIN as INPUT_NUMBER_DOMAIN
-
 from homeassistant.const import CONF_NAME
 from homeassistant.helpers import selector
 from homeassistant.helpers.schema_config_entry_flow import (
@@ -20,12 +18,12 @@ from .const import (
     AC_MODE_COOL,
     AC_MODE_HEAT,
     CONF_AC_MODE,
-    CONF_HEATER,
-    CONF_SENSOR,
     CONF_CYCLE_TIME,
+    CONF_HEATER,
     CONF_PID_KD,
     CONF_PID_KI,
     CONF_PID_KP,
+    CONF_SENSOR,
     DEFAULT_AC_MODE,
     DEFAULT_CYCLE_TIME,
     DEFAULT_PID_KD,
