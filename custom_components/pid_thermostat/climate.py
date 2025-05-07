@@ -170,6 +170,7 @@ class PidThermostat(ClimateEntity, RestoreEntity, PidBaseClass):
         self._cur_temp = None
         self._output_step = 0.01
         self._attr_last_cycle_start = dt_util.utcnow().replace(microsecond=0)
+        self._attr_extra_state_attributes = super().pid_state_attributes
 
     async def async_added_to_hass(self) -> None:
         """Run when entity about to be added."""
@@ -274,16 +275,6 @@ class PidThermostat(ClimateEntity, RestoreEntity, PidBaseClass):
         return PRECISION_TENTHS
 
     @property
-    def capability_attributes(self) -> dict[str, Any]:
-        """Return capability attributes."""
-        attr: dict[str, Any] = {}
-        attr_super = super().capability_attributes
-        if attr_super:
-            attr.update(attr_super)
-        attr.update(super().pid_capability_attributes)
-        return attr
-
-    @property
     def target_temperature_step(self) -> float:
         """Return the supported step of target temperature."""
         # Since this integration does not yet have a step size parameter
@@ -356,15 +347,15 @@ class PidThermostat(ClimateEntity, RestoreEntity, PidBaseClass):
 
         # All is done, set value
         self._hvac_mode = hvac_mode
-        # Ensure we update the current operation after changing the mode
-        self.async_write_ha_state()
+        self._attr_extra_state_attributes.update(self.pid_state_attributes)
+        self.schedule_update_ha_state()
 
     async def async_set_temperature(self, **kwargs: Any) -> None:
         """Set new target temperature."""
         if (temperature := kwargs.get(ATTR_TEMPERATURE)) is None:
             return
         self._pid.setpoint = temperature
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
     @property
     def min_temp(self) -> float:
@@ -406,7 +397,7 @@ class PidThermostat(ClimateEntity, RestoreEntity, PidBaseClass):
             self._cur_temp = _check_value(new_state.state)
         except ValueError:
             _LOGGER.exception("Unable to update from sensor.")
-        self.async_write_ha_state()
+        self.schedule_update_ha_state()
 
     async def _check_switch_initial_state(self) -> None:
         """Prevent the device from keep running if HVAC_MODE_OFF."""
@@ -433,7 +424,8 @@ class PidThermostat(ClimateEntity, RestoreEntity, PidBaseClass):
             _LOGGER.warning("PID regulator fails for thermostat %s!", self.name)
         await self._async_heater_set_value(self._pid.output)
         self._attr_last_cycle_start = dt_util.utcnow().replace(microsecond=0)
-        self.async_write_ha_state()
+        self._attr_extra_state_attributes.update(self.pid_state_attributes)
+        self.schedule_update_ha_state()
 
     @property
     def _is_device_active(self) -> bool:
@@ -502,5 +494,3 @@ class PidThermostat(ClimateEntity, RestoreEntity, PidBaseClass):
         elif preset_mode == PRESET_NONE:
             self._attr_preset_mode = PRESET_NONE
             self._pid.setpoint = self._saved_target_temp
-
-        self.async_write_ha_state()
